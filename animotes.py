@@ -39,7 +39,8 @@ class Animotes:
             content = emote_corrector(self, message)
             if content:
                 await message.delete()
-                await channel.send(content=content)
+                await channel.send(content=content[0])
+                await channel.send(content=content[1])
 
     @commands.command(aliases=['unregister'])
     async def register(self, ctx):
@@ -65,6 +66,7 @@ def emote_corrector(self, message):
         return None
     found = r.findall(message.content)
     emotes = []
+    messages=[]
     for em in found:
         temp = discord.utils.get(self.bot.emojis, name=em[1:-1])
         try:
@@ -88,9 +90,10 @@ def emote_corrector(self, message):
         esc_s = '{}<{}'.format(temp_esc[0].replace(':', '\:'), temp_esc[1])
         temp = temp.replace(esc, esc_s)
 
-    temp = '**<{}>** '.format(message.author.name) + temp
+    messages.append('**<{}>** '.format(message.author.name))
+    messages.append(temp)
 
-    return temp
+    return messages
 
 
 def setup(bot):
